@@ -3,7 +3,11 @@ package com.example.labrab55.entity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 @Data
@@ -14,15 +18,15 @@ public class Task {
     private String title;
     private String description;
     private LocalDate plannedDate;
+    private int statusId;
     private int userId;
-    private TaskStatus status;
 
-    public Task(int id, String title, String description, LocalDate plannedDate, int userId, TaskStatus status) {
+    public Task(int id, String title, String description, LocalDate plannedDate, int statusId, int userId) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.plannedDate = plannedDate;
+        this.statusId = statusId;
         this.userId = userId;
-        this.status = status;
     }
 }

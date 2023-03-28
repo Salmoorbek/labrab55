@@ -5,6 +5,8 @@ import com.example.labrab55.exeption.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,12 +15,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Component
-public class UserDao extends BaseDao{
+public class UserDao extends BaseDao {
     @Autowired
     private final PasswordEncoder encoder;
+
     public UserDao(JdbcTemplate jdbcTemplate, PasswordEncoder encoder) {
         super(jdbcTemplate);
         this.encoder = encoder;
@@ -26,14 +30,38 @@ public class UserDao extends BaseDao{
 
     @Override
     public void createTable() {
-        jdbcTemplate.execute("CREATE TABLE user (\n" +
-                "  id BIGINT PRIMARY KEY AUTO_INCREMENT,\n" +
+        jdbcTemplate.execute("CREATE TABLE if not exists users(\n" +
+                "  id SERIAL PRIMARY KEY NOT NULL,\n" +
                 "  email VARCHAR(255) NOT NULL,\n" +
                 "  username VARCHAR(255) NOT NULL,\n" +
                 "  password VARCHAR(255) NOT NULL\n" +
                 ");");
     }
-    public void createNewUser(User user){
+
+    public void saveUser(List<User> users) {
+        String sql = "INSERT INTO users (id, email, username, password)\n" +
+                "VALUES (?, ?, ?, ?);";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1,users.get(i).getId());
+                ps.setString(2, users.get(i).getEmail());
+                ps.setString(3, users.get(i).getName());
+                ps.setString(4, encoder.encode(users.get(i).getPassword()));
+            }
+            @Override
+            public int getBatchSize() {
+                return users.size();
+            }
+        });
+    }
+
+    public void deleteAll() {
+        String sql = "delete from users";
+        jdbcTemplate.update(sql);
+    }
+
+    public void createNewUser(User user) {
         String sql = "INSERT INTO users (email, name, password)\n" +
                 "VALUES (?, ?, ?);";
         jdbcTemplate.update(con -> {
@@ -44,17 +72,19 @@ public class UserDao extends BaseDao{
             return ps;
         });
     }
+
     public Optional<User> checkUser(String email, String password) throws ResourceNotFoundException {
         String sql = "SELECT id, email, name, password FROM users WHERE email = ? AND password = ?";
         try {
-            User user = jdbcTemplate.queryForObject(sql, new Object[] { email, password },
-                    (rs, rowNum) -> new User(
-                            rs.getInt("id"),
-                            rs.getString("email"),
-                            rs.getString("name"),
-                            rs.getString("password")
-                    )
-            );
+            User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), email, password);
+//            User user = jdbcTemplate.queryForObject(sql, new Object[] { email, password },
+//                    (rs, rowNum) -> new User(
+//                            rs.getInt("id"),
+//                            rs.getString("email"),
+//                            rs.getString("name"),
+//                            rs.getString("password")
+//                    )
+//            );
             return Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

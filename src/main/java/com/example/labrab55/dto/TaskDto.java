@@ -14,7 +14,7 @@ public class TaskDto {
     private String title;
     private String description;
     private LocalDate dueDate;
-    private TaskStatus status;
+    private int status;
 
     public static TaskDto from(Task task){
         return builder()
@@ -22,7 +22,7 @@ public class TaskDto {
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .dueDate(task.getPlannedDate())
-                .status(task.getStatus())
+                .status(task.getStatusId())
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.hw50.configuration;
+package com.example.labrab55.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,32 +26,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    protected void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-                .dataSource(dataSource)
-                .usersByUsernameQuery("SELECT email, password, enabled from users where email=?")
-                .authoritiesByUsernameQuery("select email, role from users where email=?");
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,
-                        "/likes/**",
-                        "/comments/**",
-                        "/publications/**",
-                        "/subscriptions/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.DELETE, "/comments/**",
-                        "/publications/**").fullyAuthenticated();
-
-        http.authorizeRequests()
-                .anyRequest()
-                .permitAll();
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.httpBasic();
-        http.formLogin().disable().logout().disable();
-        http.csrf().disable();
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/users").permitAll() // allow registration
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
     }
+
 }

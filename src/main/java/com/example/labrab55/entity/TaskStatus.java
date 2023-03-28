@@ -1,7 +1,16 @@
 package com.example.labrab55.entity;
 
-public enum TaskStatus {
-    NEW,
-    IN_PROGRESS,
-    FINISHED
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+@Data
+@RequiredArgsConstructor
+public class TaskStatus {
+    private int id;
+    private String status;
+
+    public TaskStatus(int id, String status) {
+        this.id = id;
+        this.status = status;
+    }
 }
