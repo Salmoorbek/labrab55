@@ -1,4 +1,4 @@
-package com.example.hw50.configuration;
+package com.example.labrab55.configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
