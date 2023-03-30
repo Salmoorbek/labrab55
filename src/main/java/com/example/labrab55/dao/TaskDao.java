@@ -1,12 +1,10 @@
 package com.example.labrab55.dao;
 
 import com.example.labrab55.entity.Task;
-import com.example.labrab55.mappers.TaskRowMapper;
 import com.example.labrab55.mappers.TasksRowMapper;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
