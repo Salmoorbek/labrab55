@@ -72,10 +72,6 @@ public class UserDao extends BaseDao {
         });
     }
 
-    public User findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), email);
-    }
     public List<User> getAllUsers() {
         String sql = "SELECT * FROM users ";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));

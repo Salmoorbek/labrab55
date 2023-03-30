@@ -69,8 +69,8 @@ public class TaskDao extends BaseDao {
         return jdbcTemplate.query(sql, new TasksRowMapper(), email);
     }
     public int findUserByUserEmail(String email) {
-        String sql = "SELECT tasks.id FROM tasks " +
-                "INNER JOIN users on users.id = tasks.user_id WHERE email = ? ";
+        String sql = "SELECT users.id FROM users " +
+                " WHERE email = ? ";
         return jdbcTemplate.queryForObject(sql, Integer.class, email);
     }
 
