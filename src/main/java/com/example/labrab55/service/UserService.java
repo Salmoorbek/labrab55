@@ -6,6 +6,8 @@ import com.example.labrab55.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class UserService {
     private final UserDao userDao;
@@ -16,8 +18,13 @@ public class UserService {
         this.encoder = encoder;
     }
     public UserDto registerUser(String name, String email, String password) {
-        if (userDao.findByEmail(email) != null) {
-            throw new RuntimeException("Пользователь с таким адресом почты уже зарегистрирован");
+//        if (userDao.findByEmail(email) != null) {
+//            throw new RuntimeException("Пользователь с таким адресом почты уже зарегистрирован");
+//        }
+        for (int i = 0; i < userDao.getAllUsers().size(); i++) {
+            if (Objects.equals(userDao.getAllUsers().get(i).getEmail(), email)) {
+                throw new RuntimeException("Пользователь с таким адресом почты уже зарегистрирован");
+            }
         }
         var usr = User.builder()
                 .email(email)

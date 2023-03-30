@@ -1,7 +1,6 @@
 package com.example.labrab55.dao;
 
 import com.example.labrab55.entity.User;
-import com.example.labrab55.mappers.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -76,6 +75,10 @@ public class UserDao extends BaseDao {
     public User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), email);
+    }
+    public List<User> getAllUsers() {
+        String sql = "SELECT * FROM users ";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
 
     public void alertSequenceUser() {
