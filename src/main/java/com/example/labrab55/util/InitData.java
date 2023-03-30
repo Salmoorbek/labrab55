@@ -23,9 +23,13 @@ public class InitData {
             statusDao.createTable();
             taskDao.createTable();
 
+            taskDao.deleteAll();
             userDao.deleteAll();
             statusDao.deleteAll();
-            taskDao.deleteAll();
+
+            userDao.alertSequenceUser();
+            taskDao.alertSequenceTask();
+            statusDao.alertSequenceStatus();
 
             userDao.saveUser(creatUsers());
             statusDao.saveStatuses(creatTaskStatuses());
@@ -35,15 +39,15 @@ public class InitData {
 
     public List<User> creatUsers(){
         List<User> users = new ArrayList<>();
-        users.add(new User(1,"salmor","a@a.a","123"));
-        users.add(new User(2,"ss","s@s.s","123"));
+        users.add(new User(1,"salmor","a@a.a","123",true,"USER"));
+        users.add(new User(2,"ss","s@s.s","123",true,"USER"));
         return users;
     }
     public List<Task> creatTasks(){
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,"","", LocalDate.of(2022,3,5),1, 1));
-        tasks.add(new Task(2,"","", LocalDate.of(2022,3,5),2, 2));
-        tasks.add(new Task(2,"","", LocalDate.of(2022,3,5),3, 1));
+        tasks.add(new Task(1,"Купить машину","qwertyqwertyqwerty", LocalDate.of(2022,3,5),1, 1));
+        tasks.add(new Task(2,"Продать дом","qwertyqwertyqwerty", LocalDate.of(2022,3,5),2, 2));
+        tasks.add(new Task(2,"Гулянка с друзьями","qwertyqwertyqwerty", LocalDate.of(2022,3,5),3, 1));
         return tasks;
     }
     public List<TaskStatus> creatTaskStatuses(){

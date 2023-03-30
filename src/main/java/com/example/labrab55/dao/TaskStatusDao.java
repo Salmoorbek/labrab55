@@ -14,7 +14,6 @@ public class TaskStatusDao extends BaseDao{
     public TaskStatusDao(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
-
     @Override
     public void createTable() {
         jdbcTemplate.update("CREATE TABLE if not exists statuses(" +
@@ -38,6 +37,10 @@ public class TaskStatusDao extends BaseDao{
     }
     public void deleteAll() {
         String sql = "delete from statuses";
+        jdbcTemplate.update(sql);
+    }
+    public void alertSequenceStatus() {
+        String sql = "alter sequence statuses_id_seq restart with 1";
         jdbcTemplate.update(sql);
     }
 }

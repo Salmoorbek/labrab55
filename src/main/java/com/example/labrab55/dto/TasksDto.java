@@ -8,20 +8,18 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class TaskDto {
+public class TasksDto {
     private int id;
     private String title;
-    private String description;
     private LocalDate dueDate;
-    private int status;
+    private String status;
 
-    public static TaskDto from(Task task){
+    public static TasksDto from(Task task){
         return builder()
                 .id(task.getId())
                 .title(task.getTitle())
-                .description(task.getDescription())
                 .dueDate(task.getPlannedDate())
-                .status(task.getStatusId())
+                .status(String.valueOf(task.getStatusId()))
                 .build();
     }
 }
