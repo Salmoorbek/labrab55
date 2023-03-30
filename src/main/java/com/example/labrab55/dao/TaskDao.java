@@ -20,15 +20,15 @@ public class TaskDao extends BaseDao {
 
     @Override
     public void createTable() {
-        jdbcTemplate.execute("CREATE TABLE if not exists tasks (\n" +
-                "  id SERIAL PRIMARY KEY,\n" +
-                "  title VARCHAR(255) NOT NULL,\n" +
-                "  description TEXT,\n" +
-                "  plannedDate DATE NOT NULL,\n" +
-                "  status_id BIGINT NOT NULL,\n" +
-                "  user_id BIGINT NOT NULL,\n" +
-                "  FOREIGN KEY (status_id) REFERENCES statuses(id),\n" +
-                "  FOREIGN KEY (user_id) REFERENCES users(id)\n" +
+        jdbcTemplate.execute("CREATE TABLE if not exists tasks ( " +
+                "  id SERIAL PRIMARY KEY, " +
+                "  title VARCHAR(255) NOT NULL, " +
+                "  description TEXT, " +
+                "  plannedDate DATE NOT NULL, " +
+                "  status_id BIGINT NOT NULL, " +
+                "  user_id BIGINT NOT NULL, " +
+                "  FOREIGN KEY (status_id) REFERENCES statuses(id), " +
+                "  FOREIGN KEY (user_id) REFERENCES users(id) " +
                 ");");
     }
 
@@ -38,7 +38,7 @@ public class TaskDao extends BaseDao {
     }
 
     public void saveTasks(List<Task> tasks) {
-        String sql = "INSERT INTO tasks (title, description, plannedDate, status_id,user_id)\n" +
+        String sql = "INSERT INTO tasks (title, description, plannedDate, status_id,user_id) " +
                 "VALUES (?, ?, ?, ?, ?);";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -70,13 +70,13 @@ public class TaskDao extends BaseDao {
     }
     public int findUserByUserEmail(String email) {
         String sql = "SELECT tasks.id FROM tasks " +
-                "INNER JOIN users on users.id = tasks.id WHERE email = ? ";
+                "INNER JOIN users on users.id = tasks.user_id WHERE email = ? ";
         return jdbcTemplate.queryForObject(sql, Integer.class, email);
     }
 
     public Task getTaskByIdAndUserEmail(int taskId, String userEmail) {
         String sql = "SELECT * FROM tasks " +
-                "INNER JOIN users on users.id = tasks.id WHERE tasks.id = ? and users.email =? ";
+                "INNER JOIN users on users.id = tasks.user_id WHERE tasks.id = ? and users.email =? ";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Task.class),taskId, userEmail);
     }
 
@@ -95,13 +95,13 @@ public class TaskDao extends BaseDao {
     }
 
     public void updateTaskStatus(int taskId, int newStatus) {
-        String sql = "UPDATE tasks SET status_id = ? WHERE id = ?";
+        String sql = "UPDATE tasks SET status_id = ? WHERE id = ? ";
         jdbcTemplate.update(sql, newStatus, taskId);
     }
 
     public Task getTaskById(int taskId, String email) {
         String sql = "SELECT * FROM tasks " +
-                "INNER JOIN users on users.id = tasks.id WHERE tasks.id = ? and  users.email = ?";
+                "INNER JOIN users on users.id = tasks.user_id WHERE tasks.id = ? and  users.email = ? ";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Task.class), taskId, email);
     }
 }

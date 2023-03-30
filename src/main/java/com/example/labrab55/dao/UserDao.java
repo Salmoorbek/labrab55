@@ -24,18 +24,18 @@ public class UserDao extends BaseDao {
 
     @Override
     public void createTable() {
-        jdbcTemplate.execute("CREATE TABLE if not exists users(\n" +
-                "  id SERIAL PRIMARY KEY NOT NULL,\n" +
-                "  email VARCHAR(255) NOT NULL,\n" +
-                "  name VARCHAR(255) NOT NULL," +
-                "  enabled boolean NOT NULL,\n" +
-                "  password VARCHAR(255) NOT NULL, \n" +
+        jdbcTemplate.execute("CREATE TABLE if not exists users( " +
+                "  id SERIAL PRIMARY KEY NOT NULL, " +
+                "  email VARCHAR(255) NOT NULL, " +
+                "  name VARCHAR(255) NOT NULL, " +
+                "  enabled boolean NOT NULL, " +
+                "  password VARCHAR(255) NOT NULL, " +
                 "  role text" +
                 ");");
     }
 
     public void saveUser(List<User> users) {
-        String sql = "INSERT INTO users (email, name, enabled, password, role)\n" +
+        String sql = "INSERT INTO users (email, name, enabled, password, role) " +
                 "VALUES (?, ?, ?, ?, ?);";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -59,7 +59,7 @@ public class UserDao extends BaseDao {
     }
 
     public void createNewUser(User user) {
-        String sql = "INSERT INTO users (email, name, enabled, password, role)\n" +
+        String sql = "INSERT INTO users (email, name, enabled, password, role) " +
                 "VALUES (?, ?, ?, ?, ?);";
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -82,7 +82,7 @@ public class UserDao extends BaseDao {
     }
 
     public void alertSequenceUser() {
-        String sql = "alter sequence users_id_seq restart with 1";
+        String sql = "alter sequence users_id_seq restart with 1 ";
         jdbcTemplate.update(sql);
     }
 }

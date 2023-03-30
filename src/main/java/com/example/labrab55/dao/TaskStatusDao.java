@@ -16,12 +16,12 @@ public class TaskStatusDao extends BaseDao{
     }
     @Override
     public void createTable() {
-        jdbcTemplate.update("CREATE TABLE if not exists statuses(" +
-                "id SERIAL PRIMARY KEY NOT NULL," +
+        jdbcTemplate.update("CREATE TABLE if not exists statuses( " +
+                "id SERIAL PRIMARY KEY NOT NULL, " +
                 "status VARCHAR(255) NOT NULL);");
     }
     public void saveStatuses(List<TaskStatus> statuses) {
-        String sql = "INSERT INTO statuses (id, status)\n" +
+        String sql = "INSERT INTO statuses (id, status) " +
                 "VALUES (?, ?);";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
